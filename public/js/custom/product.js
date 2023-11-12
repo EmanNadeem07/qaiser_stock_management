@@ -56,6 +56,7 @@ $(document).ready(function () {
             },
         });
     });
+
     $(".sell-product-btn").on("click", function () {
         var productId = $(this).data("product-id");
         var productQuantity = $(this).data("product-quantity");
@@ -87,6 +88,63 @@ $(document).ready(function () {
                     success: function (response) {
                         $("#saleProduct")[0].reset();
                         $("#sellProductModal").modal("hide");
+                        toastr.options = {
+                            progressBar: true,
+                            closeButton: true,
+                            timeOut: 2000,
+                        };
+                        if (response.status == true) {
+                            toastr.success(response.message, "Success");
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            toastr.error(response.message, "Error");
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(error);
+                        toastr.options = {
+                            progressBar: true,
+                            closeButton: true,
+                        };
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            for (var key in errors) {
+                                toastr.error(errors[key][0], "Error");
+                            }
+                        } else {
+                            toastr.error(
+                                "An error occurred while processing your request.",
+                                "Error"
+                            );
+                        }
+                    },
+                });
+            });
+    });
+
+    $(".add-stock-btn").on("click", function () {
+        var productId = $(this).data("product-id");
+
+        $("#addStockForm")
+            .off("submit")
+            .on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = new FormData(this);
+                $.ajax({
+                    url: "/admin/product/update/" + productId,
+                    data: formData,
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken,
+                    },
+                    success: function (response) {
+                        $("#addStockForm")[0].reset();
+                        $("#addStockModal").modal("hide");
                         toastr.options = {
                             progressBar: true,
                             closeButton: true,

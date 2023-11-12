@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <h2 class="text-center mt-3"><strong>All Products</strong></h2>
             <div class="text-left">
-                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
                     Add Product
                 </button>
 
@@ -36,12 +36,18 @@
                                         <td>{{ $product->quantity }}</td>
                                         <td>{{ $product->price_per_unit }}</td>
                                         <td>
+                                            <button type="button" class="btn btn-success btn-sm add-stock-btn"
+                                                data-bs-toggle="modal" data-bs-target="#addStockModal"
+                                                data-product-id="{{ $product->id }}">
+                                                Add stock
+                                            </button>
                                             <button type="button" class="btn btn-warning btn-sm sell-product-btn"
                                                 data-bs-toggle="modal" data-bs-target="#sellProductModal"
                                                 data-product-id="{{ $product->id }}"
                                                 data-product-quantity="{{ $product->quantity }}">
                                                 Sale Product
                                             </button>
+
                                         </td>
                                         {{-- <td><a href="{{ route('product.salePage', $product->id) }}"
                                                 class="btn btn-sm btn-danger">Sale Item</a></td> --}}
@@ -55,6 +61,7 @@
         </div>
     </div>
     @include('admin.product.modals.add')
+    @include('admin.product.modals.addStock')
     @include('admin.product.modals.addSale')
 @endsection
 @push('scripts')

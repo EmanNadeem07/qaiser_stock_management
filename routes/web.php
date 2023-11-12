@@ -42,6 +42,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::post('add', [ProductController::class, 'store'])->name('product.store');
         Route::get('list', [ProductController::class, 'list'])->name('product.list');
         Route::post('sale/{id}', [ProductController::class, 'sale'])->name('product.sale');
+        Route::post('update/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::get('sales_history', [ProductController::class, 'saleHistory'])->name('salesHistory');
     });
 });

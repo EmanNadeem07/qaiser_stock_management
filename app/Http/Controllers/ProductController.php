@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\AddSaleRequest;
+use App\Http\Requests\AddStockRequest;
 use App\Models\Category;
 use App\Models\DailySale;
 use App\Models\Product;
@@ -94,6 +95,33 @@ class ProductController extends Controller
             return view('admin.product.saleHistory', compact('sales'));
         } catch (\Throwable $th) {
             //throw $th;
+        }
+    }
+    public function update(AddStockRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $product = Product::findorfail($id);
+
+            $quantity = $product->quantity;
+            $price = $product->price_per_unit;
+
+            if ($request->quantity > 0) {
+                $quantity = $product->quantity + $request->quantity;
+            }
+            if ($request->pricePerUnit > 0) {
+                $price = $request->pricePerUnit;
+            }
+
+            $product->update([
+                'quantity' => $quantity,
+                'price_per_unit' => $price
+            ]);
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Stock added Successfully']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['status' => false, 'message' => 'Something went wrong']);
         }
     }
 }
