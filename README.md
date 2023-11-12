@@ -1,0 +1,1 @@
+# qaiser_stock_management
